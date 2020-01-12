@@ -21,7 +21,9 @@ class CalendarPicker : RecyclerView {
     private var mStartDateSelection: SelectedDate? = null
     private var mEndDateSelection: SelectedDate? = null
 
-    var onRangeSelectedListener: (startDate: Date, endDate: Date) -> Unit = { _, _ -> }
+    private var mOnStartSelectedListener: (startDate: Date, label: String) -> Unit = { _, _ -> }
+    private var mOnRangeSelectedListener: (startDate: Date, endDate: Date, startLabel: String, endLabel: String) -> Unit =
+        { _, _, _, _ -> }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
@@ -44,6 +46,14 @@ class CalendarPicker : RecyclerView {
         endCalendar.time = endDate
         mCalendarData = buildCalendarData()
         calendarAdapter.setData(mCalendarData)
+    }
+
+    fun setOnStartSelectedListener(callback: (startDate: Date, label: String) -> Unit) {
+        mOnStartSelectedListener = callback
+    }
+
+    fun setOnRangeSelectedListener(callback: (startDate: Date, endDate: Date, startLabel: String, endLabel: String) -> Unit) {
+        mOnRangeSelectedListener = callback
     }
 
     private fun initListener() {
@@ -163,9 +173,10 @@ class CalendarPicker : RecyclerView {
 
     private fun onDaySelected(item: CalendarEntity.Day, position: Int) {
 
+        if (item == mStartDateSelection?.day) return
+
         when {
             mStartDateSelection == null -> assignAsStartDate(item, position)
-
             mEndDateSelection == null -> {
                 if (mStartDateSelection!!.position > position) {
                     mCalendarData[mStartDateSelection!!.position] =
@@ -226,6 +237,7 @@ class CalendarPicker : RecyclerView {
         val newItem = item.copy(selection = SelectionType.START, isRange = isRange)
         mCalendarData[position] = newItem
         mStartDateSelection = SelectedDate(newItem, position)
+        if (!isRange) mOnStartSelectedListener.invoke(item.date, item.prettyLabel)
     }
 
     private fun assignAsEndDate(
@@ -235,6 +247,12 @@ class CalendarPicker : RecyclerView {
         val newItem = item.copy(selection = SelectionType.END)
         mCalendarData[position] = newItem
         mEndDateSelection = SelectedDate(newItem, position)
+        mOnRangeSelectedListener.invoke(
+            mStartDateSelection!!.day.date,
+            item.date,
+            mStartDateSelection!!.day.prettyLabel,
+            item.prettyLabel
+        )
     }
 
     data class SelectedDate(val day: CalendarEntity.Day, val position: Int)

@@ -36,14 +36,17 @@ class DayViewHolder(view: View) : CalendarViewHolder(view) {
             when (item.selection) {
                 SelectionType.START -> {
                     name.select()
+                    halfLeftBg.dehighlight()
                     if (item.isRange) halfRightBg.highlight()
                     else halfRightBg.dehighlight()
                 }
                 SelectionType.END -> {
                     name.select()
                     halfLeftBg.highlight()
+                    halfRightBg.dehighlight()
                 }
                 SelectionType.BETWEEN -> {
+                    name.deselect()
                     halfRightBg.highlight()
                     halfLeftBg.highlight()
                 }

@@ -1,4 +1,4 @@
-package com.andrewjapar.rangedatepicker
+package com.andrewjapar.sample
 
 import org.junit.Test
 

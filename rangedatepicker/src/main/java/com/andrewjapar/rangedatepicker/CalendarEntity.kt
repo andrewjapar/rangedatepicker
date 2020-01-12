@@ -1,5 +1,7 @@
 package com.andrewjapar.rangedatepicker
 
+import java.util.*
+
 sealed class CalendarEntity(
     val columnCount: Int,
     val calendarType: Int,
@@ -9,7 +11,12 @@ sealed class CalendarEntity(
         CalendarEntity(MONTH_COLUMN_COUNT, CalendarType.MONTH.ordinal, SelectionType.NONE)
 
     object Week : CalendarEntity(WEEK_COLUMN_COUNT, CalendarType.WEEK.ordinal, SelectionType.NONE)
-    data class Day(val label: String, val selection: SelectionType = SelectionType.NONE) :
+    data class Day(
+        val label: String,
+        val prettyLabel: String,
+        val date: Date,
+        val selection: SelectionType = SelectionType.NONE
+    ) :
         CalendarEntity(DAY_COLUMN_COUNT, CalendarType.DAY.ordinal, selection)
 
     object Empty :

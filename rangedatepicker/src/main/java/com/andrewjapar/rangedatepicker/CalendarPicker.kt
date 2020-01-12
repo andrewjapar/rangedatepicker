@@ -14,10 +14,10 @@ class CalendarPicker : RecyclerView {
     private val locale = Locale.getDefault()
 
     private val calendarAdapter = CalendarAdapter()
-    private var calendarData: MutableList<CalendarEntity> = mutableListOf()
 
-    private var startDateSelection: SelectedDate? = null
-    private var endDateSelection: SelectedDate? = null
+    private var mCalendarData: MutableList<CalendarEntity> = mutableListOf()
+    private var mStartDateSelection: SelectedDate? = null
+    private var mEndDateSelection: SelectedDate? = null
 
     var onRangeSelectedListener: (startDate: Date, endDate: Date) -> Unit = { _, _ -> }
 
@@ -44,50 +44,67 @@ class CalendarPicker : RecyclerView {
         layoutManager = GridLayoutManager(context, TOTAL_COLUMN_COUNT).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return calendarData[position].columnCount
+                    return mCalendarData[position].columnCount
                 }
             }
         }
         adapter = calendarAdapter
-
-        setData()
-        calendarAdapter.setData(calendarData)
+        mCalendarData = buildCalendarData()
+        calendarAdapter.setData(mCalendarData)
     }
 
-    private fun setData() {
+    private fun buildCalendarData(): MutableList<CalendarEntity> {
+        val calendarData = mutableListOf<CalendarEntity>()
+
         val cal = getInstance(timeZone, locale)
         val currentDay = cal.get(DAY_OF_MONTH)
         val currentMonth = cal.get(MONTH)
-        val currentYear = cal.get(YEAR)
 
         cal.set(DAY_OF_MONTH, 1)
-        (currentMonth..(currentMonth + 11)).forEach {
+        (currentMonth..(currentMonth + 11)).forEach { _ ->
 
-            val month = cal.getDisplayName(MONTH, LONG, locale) ?: ""
-            val year = cal.get(YEAR)
-
-            val numberOfDayOfMonth = cal.getActualMaximum(DAY_OF_MONTH)
-            (1..numberOfDayOfMonth).forEach {
+            val totalDayInAMonth = cal.getActualMaximum(DAY_OF_MONTH)
+            (1..totalDayInAMonth).forEach { _ ->
                 val day = cal.get(DAY_OF_MONTH)
                 val dayOfWeek = cal.get(DAY_OF_WEEK)
                 when (day) {
                     cal.firstDayOfWeek -> {
-                        calendarData.add(CalendarEntity.Month("$month $year"))
+                        calendarData.add(CalendarEntity.Month(cal.toPrettyMonthString()))
                         calendarData.add(CalendarEntity.Week)
                         calendarData.addAll(createStartEmptyView(dayOfWeek))
-                        calendarData.add(CalendarEntity.Day(day.toString()))
+                        calendarData.add(
+                            CalendarEntity.Day(
+                                day.toString(),
+                                cal.toPrettyDateString(),
+                                cal.time
+                            )
+                        )
                     }
-                    numberOfDayOfMonth -> {
-                        calendarData.add(CalendarEntity.Day(day.toString()))
+                    totalDayInAMonth -> {
+                        calendarData.add(
+                            CalendarEntity.Day(
+                                day.toString(),
+                                cal.toPrettyDateString(),
+                                cal.time
+                            )
+                        )
                         calendarData.addAll(createEndEmptyView(dayOfWeek))
                     }
                     else -> {
-                        calendarData.add(CalendarEntity.Day(day.toString()))
+                        calendarData.add(
+                            CalendarEntity.Day(
+                                day.toString(),
+                                cal.toPrettyDateString(),
+                                cal.time
+                            )
+                        )
                     }
                 }
                 cal.add(DATE, 1)
             }
         }
+
+        return calendarData
     }
 
     private fun createStartEmptyView(dayOfWeek: Int): List<CalendarEntity.Empty> {
@@ -125,41 +142,40 @@ class CalendarPicker : RecyclerView {
     private fun onDaySelected(item: CalendarEntity.Day, position: Int) {
 
         when {
-            startDateSelection == null -> assignAsStartDate(item, position)
+            mStartDateSelection == null -> assignAsStartDate(item, position)
 
-            endDateSelection == null -> {
-                if (startDateSelection!!.position > position) {
-                    calendarData[startDateSelection!!.position] =
-                        startDateSelection!!.day.copy(selection = SelectionType.NONE)
+            mEndDateSelection == null -> {
+                if (mStartDateSelection!!.position > position) {
+                    mCalendarData[mStartDateSelection!!.position] =
+                        mStartDateSelection!!.day.copy(selection = SelectionType.NONE)
                     assignAsStartDate(item, position)
                 } else {
                     assignAsEndDate(item, position)
-                    selectRange(startDateSelection!!.position, position)
+                    selectRange(mStartDateSelection!!.position, position)
                 }
             }
 
-            else -> resetSelection(item, position)
-        }
-
-        calendarAdapter.setData(calendarData)
-    }
-
-    private fun resetSelection(item: CalendarEntity.Day, position: Int) {
-        val startDatePosition = startDateSelection?.position
-        val endDatePosition = endDateSelection?.position
-
-        if (startDatePosition != null && endDatePosition != null) {
-            (startDatePosition..endDatePosition).forEach {
-                val entity = calendarData[it]
-                if (entity is CalendarEntity.Day)
-                    calendarData[it] = entity.copy(selection = SelectionType.NONE)
+            else -> {
+                resetSelection()
+                assignAsStartDate(item, position)
+                mEndDateSelection = null
             }
         }
 
-        val newItem = item.copy(selection = SelectionType.START)
-        calendarData[position] = newItem
-        startDateSelection = SelectedDate(newItem, position)
-        endDateSelection = null
+        calendarAdapter.setData(mCalendarData)
+    }
+
+    private fun resetSelection() {
+        val startDatePosition = mStartDateSelection?.position
+        val endDatePosition = mEndDateSelection?.position
+
+        if (startDatePosition != null && endDatePosition != null) {
+            (startDatePosition..endDatePosition).forEach {
+                val entity = mCalendarData[it]
+                if (entity is CalendarEntity.Day)
+                    mCalendarData[it] = entity.copy(selection = SelectionType.NONE)
+            }
+        }
     }
 
 
@@ -168,9 +184,9 @@ class CalendarPicker : RecyclerView {
         endIndex: Int
     ) {
         ((startIndex + 1) until endIndex).forEach {
-            val entity = calendarData[it]
+            val entity = mCalendarData[it]
             if (entity is CalendarEntity.Day) {
-                calendarData[it] = entity.copy(selection = SelectionType.BETWEEN)
+                mCalendarData[it] = entity.copy(selection = SelectionType.BETWEEN)
             }
         }
     }
@@ -180,8 +196,8 @@ class CalendarPicker : RecyclerView {
         position: Int
     ) {
         val newItem = item.copy(selection = SelectionType.START)
-        calendarData[position] = newItem
-        startDateSelection = SelectedDate(newItem, position)
+        mCalendarData[position] = newItem
+        mStartDateSelection = SelectedDate(newItem, position)
     }
 
     private fun assignAsEndDate(
@@ -189,8 +205,8 @@ class CalendarPicker : RecyclerView {
         position: Int
     ) {
         val newItem = item.copy(selection = SelectionType.END)
-        calendarData[position] = newItem
-        endDateSelection = SelectedDate(newItem, position)
+        mCalendarData[position] = newItem
+        mEndDateSelection = SelectedDate(newItem, position)
     }
 
     data class SelectedDate(val day: CalendarEntity.Day, val position: Int)

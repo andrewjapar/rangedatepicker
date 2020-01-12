@@ -84,7 +84,7 @@ class DayViewHolder(view: View) : CalendarViewHolder(view) {
             val color = when (item.state) {
                 DateState.DISABLED -> R.color.calendar_disabled_font_color
                 DateState.WEEKEND -> R.color.calendar_weekend_font_color
-                else -> android.R.color.tab_indicator_text
+                else -> R.color.black
             }
             ContextCompat.getColor(itemView.context, color)
         }

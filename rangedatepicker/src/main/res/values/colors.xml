@@ -6,4 +6,6 @@
     <color name="calendar_disabled_font_color">#8CE91E63</color>
     <color name="calendar_weekend_font_color">#ff0000</color>
     <color name="calendar_selected_day_font_color">#FFFFFF</color>
+
+    <color name="black">#000000</color>
 </resources>

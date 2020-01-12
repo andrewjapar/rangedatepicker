@@ -2,7 +2,6 @@ package com.andrewjapar.rangedatepicker
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -13,11 +12,12 @@ class CalendarPicker : RecyclerView {
     private val locale = Locale.getDefault()
 
     private val calendarAdapter = CalendarAdapter()
-    private var calendarEmptyData: MutableList<CalendarEntity> = mutableListOf()
     private var calendarData: MutableList<CalendarEntity> = mutableListOf()
 
     private var startDateSelection: SelectedDate? = null
     private var endDateSelection: SelectedDate? = null
+
+    var onRangeSelectedListener: (startDate: Date, endDate: Date) -> Unit = { _, _ -> }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
@@ -48,7 +48,7 @@ class CalendarPicker : RecyclerView {
         }
         adapter = calendarAdapter
 
-        calendarEmptyData = mutableListOf(
+        calendarData = mutableListOf(
             CalendarEntity.Month("January 2020"),
             CalendarEntity.Week,
             CalendarEntity.Empty,
@@ -57,75 +57,81 @@ class CalendarPicker : RecyclerView {
         )
 
         (1..31).forEach {
-            calendarEmptyData.add(CalendarEntity.Day(it.toString()))
+            calendarData.add(CalendarEntity.Day(it.toString()))
         }
-
-        calendarData.addAll(calendarEmptyData)
 
         calendarAdapter.setData(calendarData)
     }
 
     private fun onDaySelected(item: CalendarEntity.Day, position: Int) {
-//        if (startDateSelection != null && endDateSelection != null) {
-//            resetSelection()
-//        }
 
         when {
-            startDateSelection == null -> {
-                Log.d("testo", "start")
-                val newItem = item.copy(selection = SelectionType.START)
-                calendarData[position] = newItem
-                startDateSelection = SelectedDate(newItem, position)
-            }
+            startDateSelection == null -> assignAsStartDate(item, position)
 
             endDateSelection == null -> {
-                Log.d("testo", "end")
-                val newItem = item.copy(selection = SelectionType.END)
-                endDateSelection = SelectedDate(newItem, position)
-
-                if (startDateSelection != null) {
-                    selectRange(startDateSelection?.position ?: 0, position)
+                if (startDateSelection!!.position > position) {
+                    calendarData[startDateSelection!!.position] =
+                        startDateSelection!!.day.copy(selection = SelectionType.NONE)
+                    assignAsStartDate(item, position)
+                } else {
+                    assignAsEndDate(item, position)
+                    selectRange(startDateSelection!!.position, position)
                 }
             }
-            else -> {
-                Log.d("testo", "other")
-                resetSelection(item, position)
 
-            }
-
+            else -> resetSelection(item, position)
         }
+
         calendarAdapter.setData(calendarData)
     }
 
-
-    @Synchronized
     private fun resetSelection(item: CalendarEntity.Day, position: Int) {
-        startDateSelection = null
-        endDateSelection = null
+        val startDatePosition = startDateSelection?.position
+        val endDatePosition = endDateSelection?.position
 
-        calendarData.clear()
-        calendarData.addAll(calendarEmptyData)
+        if (startDatePosition != null && endDatePosition != null) {
+            (startDatePosition..endDatePosition).forEach {
+                val entity = calendarData[it]
+                if (entity is CalendarEntity.Day)
+                    calendarData[it] = entity.copy(selection = SelectionType.NONE)
+            }
+        }
 
         val newItem = item.copy(selection = SelectionType.START)
         calendarData[position] = newItem
         startDateSelection = SelectedDate(newItem, position)
+        endDateSelection = null
     }
+
 
     private fun selectRange(
         startIndex: Int,
         endIndex: Int
     ) {
-        calendarData.forEachIndexed { index, calendarEntity ->
-            if (calendarEntity is CalendarEntity.Day) {
-                val status = when {
-                    startIndex == index -> SelectionType.START
-                    endIndex == index -> SelectionType.END
-                    index in (startIndex + 1) until endIndex -> SelectionType.BETWEEN
-                    else -> SelectionType.NONE
-                }
-                calendarData[index] = calendarEntity.copy(selection = status)
+        ((startIndex + 1) until endIndex).forEach {
+            val entity = calendarData[it]
+            if (entity is CalendarEntity.Day) {
+                calendarData[it] = entity.copy(selection = SelectionType.BETWEEN)
             }
         }
+    }
+
+    private fun assignAsStartDate(
+        item: CalendarEntity.Day,
+        position: Int
+    ) {
+        val newItem = item.copy(selection = SelectionType.START)
+        calendarData[position] = newItem
+        startDateSelection = SelectedDate(newItem, position)
+    }
+
+    private fun assignAsEndDate(
+        item: CalendarEntity.Day,
+        position: Int
+    ) {
+        val newItem = item.copy(selection = SelectionType.END)
+        calendarData[position] = newItem
+        endDateSelection = SelectedDate(newItem, position)
     }
 
     data class SelectedDate(val day: CalendarEntity.Day, val position: Int)

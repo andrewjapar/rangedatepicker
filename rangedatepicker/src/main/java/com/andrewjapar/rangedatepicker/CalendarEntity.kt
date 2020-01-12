@@ -5,11 +5,11 @@ sealed class CalendarEntity(
     val calendarType: Int,
     val selectionType: SelectionType
 ) {
-    data class Month(val value: String) :
+    data class Month(val label: String) :
         CalendarEntity(MONTH_COLUMN_COUNT, CalendarType.MONTH.ordinal, SelectionType.NONE)
 
     object Week : CalendarEntity(WEEK_COLUMN_COUNT, CalendarType.WEEK.ordinal, SelectionType.NONE)
-    data class Day(val value: String, var selection: SelectionType = SelectionType.NONE) :
+    data class Day(val label: String, val selection: SelectionType = SelectionType.NONE) :
         CalendarEntity(DAY_COLUMN_COUNT, CalendarType.DAY.ordinal, selection)
 
     object Empty :

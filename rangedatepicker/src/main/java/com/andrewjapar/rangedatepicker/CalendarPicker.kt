@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
+import java.util.Calendar.*
+
 
 class CalendarPicker : RecyclerView {
 
@@ -48,19 +50,76 @@ class CalendarPicker : RecyclerView {
         }
         adapter = calendarAdapter
 
-        calendarData = mutableListOf(
-            CalendarEntity.Month("January 2020"),
-            CalendarEntity.Week,
-            CalendarEntity.Empty,
-            CalendarEntity.Empty,
-            CalendarEntity.Empty
-        )
+        setData()
+        calendarAdapter.setData(calendarData)
+    }
 
-        (1..31).forEach {
-            calendarData.add(CalendarEntity.Day(it.toString()))
+    private fun setData() {
+        val cal = getInstance(timeZone, locale)
+        val currentDay = cal.get(DAY_OF_MONTH)
+        val currentMonth = cal.get(MONTH)
+        val currentYear = cal.get(YEAR)
+
+        cal.set(DAY_OF_MONTH, 1)
+        (currentMonth..(currentMonth + 11)).forEach {
+
+            val month = cal.getDisplayName(MONTH, LONG, locale) ?: ""
+            val year = cal.get(YEAR)
+
+            val numberOfDayOfMonth = cal.getActualMaximum(DAY_OF_MONTH)
+            (1..numberOfDayOfMonth).forEach {
+                val day = cal.get(DAY_OF_MONTH)
+                val dayOfWeek = cal.get(DAY_OF_WEEK)
+                when (day) {
+                    cal.firstDayOfWeek -> {
+                        calendarData.add(CalendarEntity.Month("$month $year"))
+                        calendarData.add(CalendarEntity.Week)
+                        calendarData.addAll(createStartEmptyView(dayOfWeek))
+                        calendarData.add(CalendarEntity.Day(day.toString()))
+                    }
+                    numberOfDayOfMonth -> {
+                        calendarData.add(CalendarEntity.Day(day.toString()))
+                        calendarData.addAll(createEndEmptyView(dayOfWeek))
+                    }
+                    else -> {
+                        calendarData.add(CalendarEntity.Day(day.toString()))
+                    }
+                }
+                cal.add(DATE, 1)
+            }
+        }
+    }
+
+    private fun createStartEmptyView(dayOfWeek: Int): List<CalendarEntity.Empty> {
+        val numberOfEmptyView = when (dayOfWeek) {
+            MONDAY -> 1
+            TUESDAY -> 2
+            WEDNESDAY -> 3
+            THURSDAY -> 4
+            FRIDAY -> 5
+            SATURDAY -> 6
+            else -> 0
         }
 
-        calendarAdapter.setData(calendarData)
+        val listEmpty = mutableListOf<CalendarEntity.Empty>()
+        repeat((0..numberOfEmptyView).count()) { listEmpty.add(CalendarEntity.Empty) }
+        return listEmpty
+    }
+
+    private fun createEndEmptyView(dayOfWeek: Int): List<CalendarEntity.Empty> {
+        val numberOfEmptyView = when (dayOfWeek) {
+            SUNDAY -> 6
+            MONDAY -> 5
+            TUESDAY -> 4
+            WEDNESDAY -> 3
+            THURSDAY -> 2
+            FRIDAY -> 1
+            else -> 6
+        }
+
+        val listEmpty = mutableListOf<CalendarEntity.Empty>()
+        repeat((0..numberOfEmptyView).count()) { listEmpty.add(CalendarEntity.Empty) }
+        return listEmpty
     }
 
     private fun onDaySelected(item: CalendarEntity.Day, position: Int) {

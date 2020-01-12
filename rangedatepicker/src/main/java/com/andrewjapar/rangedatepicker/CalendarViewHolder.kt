@@ -1,6 +1,5 @@
 package com.andrewjapar.rangedatepicker
 
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +15,7 @@ class MonthViewHolder(private val view: View) : CalendarViewHolder(view) {
 
     override fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit) {
         if (item is CalendarEntity.Month) {
-            name.text = item.value
+            name.text = item.label
         }
     }
 }
@@ -31,7 +30,7 @@ class DayViewHolder(view: View) : CalendarViewHolder(view) {
 
     override fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit) {
         if (item is CalendarEntity.Day) {
-            name.text = item.value
+            name.text = item.label
             name.setBackgroundColor(getColor(item))
             itemView.setOnClickListener {
                 actionListener.invoke(

@@ -1,6 +1,5 @@
 package com.andrewjapar.rangedatepicker
 
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 
 class CalendarDiffCallback(

@@ -15,7 +15,8 @@ sealed class CalendarEntity(
         val label: String,
         val prettyLabel: String,
         val date: Date,
-        val selection: SelectionType = SelectionType.NONE
+        val selection: SelectionType = SelectionType.NONE,
+        val state: DateState = DateState.WEEKDAY
     ) :
         CalendarEntity(DAY_COLUMN_COUNT, CalendarType.DAY.ordinal, selection)
 
@@ -41,4 +42,10 @@ enum class SelectionType {
     BETWEEN,
     END,
     NONE
+}
+
+enum class DateState {
+    WEEKDAY,
+    DISABLED,
+    WEEKEND
 }

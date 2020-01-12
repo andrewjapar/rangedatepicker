@@ -14,6 +14,7 @@ class CalendarPicker : RecyclerView {
     private val locale = Locale.getDefault()
 
     private val calendarAdapter = CalendarAdapter()
+    private val mCalendar = getInstance(timeZone, locale)
 
     private var mCalendarData: MutableList<CalendarEntity> = mutableListOf()
     private var mStartDateSelection: SelectedDate? = null
@@ -32,6 +33,12 @@ class CalendarPicker : RecyclerView {
     init {
         initAdapter()
         initListener()
+    }
+
+    fun setRangeDate(date: Date) {
+        mCalendar.time = date
+        mCalendarData = buildCalendarData()
+        calendarAdapter.setData(mCalendarData)
     }
 
     private fun initListener() {
@@ -56,9 +63,10 @@ class CalendarPicker : RecyclerView {
     private fun buildCalendarData(): MutableList<CalendarEntity> {
         val calendarData = mutableListOf<CalendarEntity>()
 
-        val cal = getInstance(timeZone, locale)
+        val cal = mCalendar
         val currentDay = cal.get(DAY_OF_MONTH)
         val currentMonth = cal.get(MONTH)
+        val currentYear = cal.get(YEAR)
 
         cal.set(DAY_OF_MONTH, 1)
         (currentMonth..(currentMonth + 11)).forEach { _ ->
@@ -67,6 +75,11 @@ class CalendarPicker : RecyclerView {
             (1..totalDayInAMonth).forEach { _ ->
                 val day = cal.get(DAY_OF_MONTH)
                 val dayOfWeek = cal.get(DAY_OF_WEEK)
+                val dateState = if (cal.isBefore(currentDay, currentMonth, currentYear)) {
+                    DateState.DISABLED
+                } else {
+                    DateState.WEEKDAY
+                }
                 when (day) {
                     cal.firstDayOfWeek -> {
                         calendarData.add(CalendarEntity.Month(cal.toPrettyMonthString()))
@@ -76,7 +89,8 @@ class CalendarPicker : RecyclerView {
                             CalendarEntity.Day(
                                 day.toString(),
                                 cal.toPrettyDateString(),
-                                cal.time
+                                cal.time,
+                                state = dateState
                             )
                         )
                     }
@@ -85,7 +99,8 @@ class CalendarPicker : RecyclerView {
                             CalendarEntity.Day(
                                 day.toString(),
                                 cal.toPrettyDateString(),
-                                cal.time
+                                cal.time,
+                                state = dateState
                             )
                         )
                         calendarData.addAll(createEndEmptyView(dayOfWeek))
@@ -95,7 +110,8 @@ class CalendarPicker : RecyclerView {
                             CalendarEntity.Day(
                                 day.toString(),
                                 cal.toPrettyDateString(),
-                                cal.time
+                                cal.time,
+                                state = dateState
                             )
                         )
                     }
@@ -151,14 +167,13 @@ class CalendarPicker : RecyclerView {
                     assignAsStartDate(item, position)
                 } else {
                     assignAsEndDate(item, position)
-                    selectRange(mStartDateSelection!!.position, position)
+                    highlightDateBetween(mStartDateSelection!!.position, position)
                 }
             }
 
             else -> {
                 resetSelection()
                 assignAsStartDate(item, position)
-                mEndDateSelection = null
             }
         }
 
@@ -176,10 +191,11 @@ class CalendarPicker : RecyclerView {
                     mCalendarData[it] = entity.copy(selection = SelectionType.NONE)
             }
         }
+        mEndDateSelection = null
     }
 
 
-    private fun selectRange(
+    private fun highlightDateBetween(
         startIndex: Int,
         endIndex: Int
     ) {

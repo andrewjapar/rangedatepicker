@@ -27,11 +27,33 @@ open class WeekViewHolder(view: View) : CalendarViewHolder(view) {
 
 class DayViewHolder(view: View) : CalendarViewHolder(view) {
     private val name by lazy { view.vDayName }
+    private val halfLeftBg by lazy { view.vHalfLeftBg }
+    private val halfRightBg by lazy { view.vHalfRightBg }
 
     override fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit) {
         if (item is CalendarEntity.Day) {
             name.text = item.label
-            name.setBackgroundColor(getBackgroundColor(item))
+            when (item.selection) {
+                SelectionType.START -> {
+                    name.select()
+                    if (item.isRange) halfRightBg.highlight()
+                    else halfRightBg.dehighlight()
+                }
+                SelectionType.END -> {
+                    name.select()
+                    halfLeftBg.highlight()
+                }
+                SelectionType.BETWEEN -> {
+                    halfRightBg.highlight()
+                    halfLeftBg.highlight()
+                }
+                SelectionType.NONE -> {
+                    halfLeftBg.dehighlight()
+                    halfRightBg.dehighlight()
+                    name.deselect()
+                }
+            }
+
             name.setTextColor(getFontColor(item))
             if (item.state != DateState.DISABLED) {
                 itemView.setOnClickListener {
@@ -66,6 +88,25 @@ class DayViewHolder(view: View) : CalendarViewHolder(view) {
             }
             ContextCompat.getColor(itemView.context, color)
         }
+    }
+
+    private fun View.select() {
+        val drawable = ContextCompat.getDrawable(context, R.drawable.selected_day_bg)
+        background = drawable
+    }
+
+    private fun View.deselect() {
+        background = null
+    }
+
+    private fun View.dehighlight() {
+        val color = ContextCompat.getColor(context, R.color.calendar_unselected_day)
+        setBackgroundColor(color)
+    }
+
+    private fun View.highlight() {
+        val color = ContextCompat.getColor(context, R.color.calendar_selected_range_bg)
+        setBackgroundColor(color)
     }
 }
 

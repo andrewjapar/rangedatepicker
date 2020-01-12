@@ -16,7 +16,8 @@ sealed class CalendarEntity(
         val prettyLabel: String,
         val date: Date,
         val selection: SelectionType = SelectionType.NONE,
-        val state: DateState = DateState.WEEKDAY
+        val state: DateState = DateState.WEEKDAY,
+        val isRange: Boolean = false
     ) :
         CalendarEntity(DAY_COLUMN_COUNT, CalendarType.DAY.ordinal, selection)
 

@@ -172,6 +172,11 @@ class CalendarPicker : RecyclerView {
                         mStartDateSelection!!.day.copy(selection = SelectionType.NONE)
                     assignAsStartDate(item, position)
                 } else {
+                    assignAsStartDate(
+                        mStartDateSelection!!.day,
+                        mStartDateSelection!!.position,
+                        true
+                    )
                     assignAsEndDate(item, position)
                     highlightDateBetween(mStartDateSelection!!.position, position)
                 }
@@ -215,9 +220,10 @@ class CalendarPicker : RecyclerView {
 
     private fun assignAsStartDate(
         item: CalendarEntity.Day,
-        position: Int
+        position: Int,
+        isRange: Boolean = false
     ) {
-        val newItem = item.copy(selection = SelectionType.START)
+        val newItem = item.copy(selection = SelectionType.START, isRange = isRange)
         mCalendarData[position] = newItem
         mStartDateSelection = SelectedDate(newItem, position)
     }

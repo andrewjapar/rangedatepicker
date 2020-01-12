@@ -11,7 +11,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
-        calendar.add(Calendar.MONTH, 1)
-        calendar_view.setRangeDate(calendar.time)
+        calendar.add(Calendar.MONTH, 0)
+        val calendar2 = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
+        calendar2.time = calendar.time
+        calendar2.add(Calendar.YEAR, 1)
+        calendar_view.setRangeDate(calendar.time, calendar2.time)
     }
 }

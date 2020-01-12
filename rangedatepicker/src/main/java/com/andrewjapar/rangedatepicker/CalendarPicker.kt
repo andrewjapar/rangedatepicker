@@ -14,7 +14,8 @@ class CalendarPicker : RecyclerView {
     private val locale = Locale.getDefault()
 
     private val calendarAdapter = CalendarAdapter()
-    private val mCalendar = getInstance(timeZone, locale)
+    private val startCalendar = getInstance(timeZone, locale)
+    private val endCalendar = getInstance(timeZone, locale)
 
     private var mCalendarData: MutableList<CalendarEntity> = mutableListOf()
     private var mStartDateSelection: SelectedDate? = null
@@ -31,12 +32,16 @@ class CalendarPicker : RecyclerView {
     )
 
     init {
+        endCalendar.add(YEAR, 1)
         initAdapter()
         initListener()
     }
 
-    fun setRangeDate(date: Date) {
-        mCalendar.time = date
+    fun setRangeDate(startDate: Date, endDate: Date) {
+        require(startDate.time <= endDate.time) { "startDate can't be higher than endDate" }
+
+        startCalendar.time = startDate
+        endCalendar.time = endDate
         mCalendarData = buildCalendarData()
         calendarAdapter.setData(mCalendarData)
     }
@@ -62,20 +67,21 @@ class CalendarPicker : RecyclerView {
 
     private fun buildCalendarData(): MutableList<CalendarEntity> {
         val calendarData = mutableListOf<CalendarEntity>()
+        val cal = getInstance(timeZone, locale)
+        cal.time = startCalendar.time
 
-        val cal = mCalendar
-        val currentDay = cal.get(DAY_OF_MONTH)
-        val currentMonth = cal.get(MONTH)
-        val currentYear = cal.get(YEAR)
+        val monthDifference = endCalendar.totalMonthDifference(startCalendar)
 
         cal.set(DAY_OF_MONTH, 1)
-        (currentMonth..(currentMonth + 11)).forEach { _ ->
-
+        (0..monthDifference).forEach { _ ->
             val totalDayInAMonth = cal.getActualMaximum(DAY_OF_MONTH)
             (1..totalDayInAMonth).forEach { _ ->
                 val day = cal.get(DAY_OF_MONTH)
                 val dayOfWeek = cal.get(DAY_OF_WEEK)
-                val dateState = if (cal.isBefore(currentDay, currentMonth, currentYear)) {
+                val dateState = if (
+                    cal.isBefore(startCalendar)
+                    || cal.isAfter(endCalendar)
+                ) {
                     DateState.DISABLED
                 } else {
                     DateState.WEEKDAY

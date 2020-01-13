@@ -20,18 +20,24 @@ class CalendarPicker : RecyclerView {
     private var mCalendarData: MutableList<CalendarEntity> = mutableListOf()
     private var mStartDateSelection: SelectedDate? = null
     private var mEndDateSelection: SelectedDate? = null
+    private var mPickerSelectionType = SelectionMode.RANGE
 
     private var mOnStartSelectedListener: (startDate: Date, label: String) -> Unit = { _, _ -> }
     private var mOnRangeSelectedListener: (startDate: Date, endDate: Date, startLabel: String, endLabel: String) -> Unit =
         { _, _, _, _ -> }
 
     constructor(context: Context) : super(context)
-    constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
+    constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
+        extractAttributes(attributeSet)
+    }
+
     constructor(context: Context, attributeSet: AttributeSet, defStyle: Int) : super(
         context,
         attributeSet,
         defStyle
-    )
+    ) {
+        extractAttributes(attributeSet)
+    }
 
     init {
         endCalendar.add(YEAR, 1)
@@ -44,8 +50,13 @@ class CalendarPicker : RecyclerView {
 
         startCalendar.time = startDate
         endCalendar.time = endDate
+
         mCalendarData = buildCalendarData()
         calendarAdapter.setData(mCalendarData)
+    }
+
+    fun setMode(mode: SelectionMode) {
+        mPickerSelectionType = mode
     }
 
     fun setOnStartSelectedListener(callback: (startDate: Date, label: String) -> Unit) {
@@ -73,6 +84,13 @@ class CalendarPicker : RecyclerView {
         adapter = calendarAdapter
         mCalendarData = buildCalendarData()
         calendarAdapter.setData(mCalendarData)
+    }
+
+    private fun extractAttributes(attrs: AttributeSet) {
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CalendarPicker)
+        mPickerSelectionType =
+            SelectionMode.values()[typedArray.getInt(R.styleable.CalendarPicker_picker_type, 0)]
+        typedArray.recycle()
     }
 
     private fun buildCalendarData(): MutableList<CalendarEntity> {
@@ -176,6 +194,13 @@ class CalendarPicker : RecyclerView {
         if (item == mStartDateSelection?.day) return
 
         when {
+            mPickerSelectionType == SelectionMode.SINGLE -> {
+                if (mStartDateSelection != null) {
+                    mCalendarData[mStartDateSelection!!.position] =
+                        mStartDateSelection!!.day.copy(selection = SelectionType.NONE)
+                }
+                assignAsStartDate(item, position)
+            }
             mStartDateSelection == null -> assignAsStartDate(item, position)
             mEndDateSelection == null -> {
                 if (mStartDateSelection!!.position > position) {
@@ -256,4 +281,6 @@ class CalendarPicker : RecyclerView {
     }
 
     data class SelectedDate(val day: CalendarEntity.Day, val position: Int)
+
+    enum class SelectionMode { SINGLE, RANGE }
 }

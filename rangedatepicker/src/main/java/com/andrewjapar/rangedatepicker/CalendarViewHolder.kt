@@ -71,15 +71,6 @@ class DayViewHolder(view: View) : CalendarViewHolder(view) {
         }
     }
 
-    private fun getBackgroundColor(item: CalendarEntity): Int {
-        val color = when (item.selectionType) {
-            SelectionType.NONE -> R.color.calendar_unselected_day
-            SelectionType.START, SelectionType.END -> R.color.calendar_selected_day_bg
-            SelectionType.BETWEEN -> R.color.calendar_selected_range_bg
-        }
-        return ContextCompat.getColor(itemView.context, color)
-    }
-
     private fun getFontColor(item: CalendarEntity.Day): Int {
         return if (item.selection == SelectionType.START || item.selection == SelectionType.END) {
             ContextCompat.getColor(itemView.context, R.color.calendar_selected_day_font_color)

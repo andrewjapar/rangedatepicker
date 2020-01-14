@@ -1,5 +1,5 @@
 # CPicker (Calendar Picker)
-📆 A simple horizontal date picker for Android, written in kotlin  🇮🇩
+📆 A simple vertical date picker for Android, written in kotlin  🇮🇩
 
 ## Screenshoot
 <img src="https://github.com/andrewjapar/rangedatepicker/blob/master/screenshoot/rangepicker_screenshoot_1.png" width="250">&nbsp;&nbsp;<img src="https://github.com/andrewjapar/rangedatepicker/blob/master/screenshoot/rangepicker_ux.gif" width="250">

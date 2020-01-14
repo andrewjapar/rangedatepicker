@@ -1,8 +1,22 @@
 # CPicker (Calendar Picker)
 📆 A simple vertical date picker for Android, written in kotlin  🇮🇩
 
+[![Download](https://api.bintray.com/packages/andrewjapar/Android/CPicker/images/download.svg)](https://bintray.com/andrewjapar/Android/CPicker/_latestVersion)
+
 ## Screenshoot
 <img src="https://github.com/andrewjapar/rangedatepicker/blob/master/screenshoot/rangepicker_screenshoot_1.png" width="250">&nbsp;&nbsp;<img src="https://github.com/andrewjapar/rangedatepicker/blob/master/screenshoot/rangepicker_ux.gif" width="250">
+
+## Installation
+### Gradle
+```kotlin
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'com.andrewjapar.rangedatepicker:rangedatepicker:0.1.0'
+}
+```
 
 ## Usage
 ### 1. Add CalendarPicker to your XML file

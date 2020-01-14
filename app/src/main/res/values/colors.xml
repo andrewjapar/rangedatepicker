@@ -6,4 +6,6 @@
 
     <color name="calendar_day_selected_bg">#F69129</color>
     <color name="calendar_day_range_selected_bg">#66F69129</color>
+
+    <color name="calendar_picker_bg">#F4F4F7</color>
 </resources>

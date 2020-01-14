@@ -18,6 +18,7 @@ package com.andrewjapar.rangedatepicker
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -57,6 +58,7 @@ class CalendarPicker : RecyclerView {
 
     init {
         endCalendar.add(YEAR, 1)
+        setBackgroundColor(ContextCompat.getColor(context, R.color.calendar_picker_bg))
         initAdapter()
         initListener()
     }

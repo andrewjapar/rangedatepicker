@@ -2,6 +2,8 @@
 <resources>
 
     <!--Background color-->
+    <color name="calendar_picker_bg">#00FFFFFF</color>
+
     <color name="calendar_day_unselected_bg">#00000000</color>
     <color name="calendar_day_selected_bg">#E91E63</color>
     <color name="calendar_day_range_selected_bg">#8CE91E63</color>

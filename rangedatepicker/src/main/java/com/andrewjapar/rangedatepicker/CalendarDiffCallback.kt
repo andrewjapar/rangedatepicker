@@ -18,7 +18,7 @@ package com.andrewjapar.rangedatepicker
 
 import androidx.recyclerview.widget.DiffUtil
 
-class CalendarDiffCallback(
+internal class CalendarDiffCallback(
     private val oldList: List<CalendarEntity>,
     private val newList: List<CalendarEntity>
 ) : DiffUtil.Callback() {

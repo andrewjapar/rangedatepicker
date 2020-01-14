@@ -18,7 +18,7 @@ package com.andrewjapar.rangedatepicker
 
 import java.util.*
 
-sealed class CalendarEntity(
+internal sealed class CalendarEntity(
     val columnCount: Int,
     val calendarType: Int,
     val selectionType: SelectionType

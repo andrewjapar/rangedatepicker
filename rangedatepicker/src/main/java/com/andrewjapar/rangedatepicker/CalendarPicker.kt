@@ -296,7 +296,7 @@ class CalendarPicker : RecyclerView {
         )
     }
 
-    data class SelectedDate(val day: CalendarEntity.Day, val position: Int)
+    internal data class SelectedDate(val day: CalendarEntity.Day, val position: Int)
 
     enum class SelectionMode { SINGLE, RANGE }
 }

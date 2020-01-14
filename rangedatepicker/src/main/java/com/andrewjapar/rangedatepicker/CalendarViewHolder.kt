@@ -22,11 +22,11 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.calendar_day_view.view.*
 import kotlinx.android.synthetic.main.calendar_month_view.view.*
 
-abstract class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+internal abstract class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     abstract fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit)
 }
 
-class MonthViewHolder(private val view: View) : CalendarViewHolder(view) {
+internal class MonthViewHolder(private val view: View) : CalendarViewHolder(view) {
     private val name by lazy { view.vMonthName }
 
     override fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit) {
@@ -36,12 +36,12 @@ class MonthViewHolder(private val view: View) : CalendarViewHolder(view) {
     }
 }
 
-open class WeekViewHolder(view: View) : CalendarViewHolder(view) {
+internal open class WeekViewHolder(view: View) : CalendarViewHolder(view) {
     override fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit) {
     }
 }
 
-class DayViewHolder(view: View) : CalendarViewHolder(view) {
+internal class DayViewHolder(view: View) : CalendarViewHolder(view) {
     private val name by lazy { view.vDayName }
     private val halfLeftBg by lazy { view.vHalfLeftBg }
     private val halfRightBg by lazy { view.vHalfRightBg }
@@ -120,4 +120,4 @@ class DayViewHolder(view: View) : CalendarViewHolder(view) {
     }
 }
 
-class EmptyViewHolder(view: View) : WeekViewHolder(view)
+internal class EmptyViewHolder(view: View) : WeekViewHolder(view)

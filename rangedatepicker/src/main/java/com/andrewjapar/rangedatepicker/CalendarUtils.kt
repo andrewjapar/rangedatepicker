@@ -19,8 +19,8 @@ package com.andrewjapar.rangedatepicker
 import java.util.*
 import java.util.Calendar.*
 
-fun Calendar.toPrettyMonthString(
-    style: Int = Calendar.LONG,
+internal fun Calendar.toPrettyMonthString(
+    style: Int = LONG,
     locale: Locale = Locale.getDefault()
 ): String {
     val month = getDisplayName(MONTH, style, locale)
@@ -29,24 +29,24 @@ fun Calendar.toPrettyMonthString(
     else "$month $year"
 }
 
-fun Calendar.toPrettyDateString(locale: Locale = Locale.getDefault()): String {
+internal fun Calendar.toPrettyDateString(locale: Locale = Locale.getDefault()): String {
     val day = get(DAY_OF_MONTH).toString()
     return "$day ${this.toPrettyMonthString(Calendar.SHORT, locale)}"
 }
 
-fun Calendar.isBefore(otherCalendar: Calendar): Boolean {
+internal fun Calendar.isBefore(otherCalendar: Calendar): Boolean {
     return get(YEAR) == otherCalendar.get(YEAR)
             && get(MONTH) == otherCalendar.get(MONTH)
             && get(DAY_OF_MONTH) < otherCalendar.get(DAY_OF_MONTH)
 }
 
-fun Calendar.isAfter(otherCalendar: Calendar): Boolean {
+internal fun Calendar.isAfter(otherCalendar: Calendar): Boolean {
     return get(YEAR) == otherCalendar.get(YEAR)
             && get(MONTH) == otherCalendar.get(MONTH)
             && get(DAY_OF_MONTH) > otherCalendar.get(DAY_OF_MONTH)
 }
 
-fun Calendar.totalMonthDifference(startCalendar: Calendar): Int {
+internal fun Calendar.totalMonthDifference(startCalendar: Calendar): Int {
     val yearDiff = get(YEAR) - startCalendar.get(YEAR)
     val monthDiff = get(MONTH) - startCalendar.get(MONTH)
 

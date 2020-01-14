@@ -23,7 +23,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder>() {
+internal class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder>() {
 
     private val data: MutableList<CalendarEntity> = mutableListOf()
     var onActionListener: (CalendarEntity, Int) -> Unit = { _, _ -> }

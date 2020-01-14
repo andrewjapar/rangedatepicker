@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="8dp">
+    android:paddingBottom="@dimen/calendar_day_gap">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,23 +14,22 @@
         <View
             android:id="@+id/vHalfLeftBg"
             android:layout_width="0dp"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/calendar_day_height"
             android:layout_weight="1" />
 
         <View
             android:id="@+id/vHalfRightBg"
             android:layout_width="0dp"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/calendar_day_height"
             android:layout_weight="1" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/vDayName"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="31" />
+        android:layout_width="@dimen/calendar_day_height"
+        android:layout_height="@dimen/calendar_day_height"
+        style="@style/CalendarPickerCell.Day"
+        tools:text="31" />
 
 </FrameLayout>

@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">rangedatepicker</string>
+
+    <string name="calendar_sunday">Sun</string>
+    <string name="calendar_monday">Mon</string>
+    <string name="calendar_tuesday">Tue</string>
+    <string name="calendar_wednesday">Wed</string>
+    <string name="calendar_thursday">Thu</string>
+    <string name="calendar_friday">Fri</string>
+    <string name="calendar_saturday">Sat</string>
 </resources>

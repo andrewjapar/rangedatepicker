@@ -89,12 +89,12 @@ internal class DayViewHolder(view: View) : CalendarViewHolder(view) {
 
     private fun getFontColor(item: CalendarEntity.Day): Int {
         return if (item.selection == SelectionType.START || item.selection == SelectionType.END) {
-            ContextCompat.getColor(itemView.context, R.color.calendar_selected_day_font_color)
+            ContextCompat.getColor(itemView.context, R.color.calendar_day_selected_font)
         } else {
             val color = when (item.state) {
-                DateState.DISABLED -> R.color.calendar_disabled_font_color
-                DateState.WEEKEND -> R.color.calendar_weekend_font_color
-                else -> R.color.black
+                DateState.DISABLED -> R.color.calendar_day_disabled_font
+                DateState.WEEKEND -> R.color.calendar_day_weekend_font
+                else -> R.color.calendar_day_normal_font
             }
             ContextCompat.getColor(itemView.context, color)
         }
@@ -110,12 +110,12 @@ internal class DayViewHolder(view: View) : CalendarViewHolder(view) {
     }
 
     private fun View.dehighlight() {
-        val color = ContextCompat.getColor(context, R.color.calendar_unselected_day)
+        val color = ContextCompat.getColor(context, R.color.calendar_day_unselected_bg)
         setBackgroundColor(color)
     }
 
     private fun View.highlight() {
-        val color = ContextCompat.getColor(context, R.color.calendar_selected_range_bg)
+        val color = ContextCompat.getColor(context, R.color.calendar_day_range_selected_bg)
         setBackgroundColor(color)
     }
 }

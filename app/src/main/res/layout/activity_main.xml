@@ -12,6 +12,6 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay"
-        app:picker_type="single" />
+        app:picker_type="range" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

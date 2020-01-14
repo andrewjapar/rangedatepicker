@@ -3,5 +3,5 @@
     android:shape="rectangle">
 
     <corners android:radius="100dp" />
-    <solid android:color="@color/calendar_selected_day_bg" />
+    <solid android:color="@color/calendar_day_selected_bg" />
 </shape>

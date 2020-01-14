@@ -7,52 +7,52 @@
     android:weightSum="7">
 
     <TextView
+        style="@style/CalendarPickerCell.Week"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="Sun" />
+        android:text="@string/calendar_sunday" />
 
     <TextView
+        style="@style/CalendarPickerCell.Week"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="Mon" />
+        android:text="@string/calendar_monday" />
 
     <TextView
+        style="@style/CalendarPickerCell.Week"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="Tue" />
+        android:text="@string/calendar_tuesday" />
 
     <TextView
+        style="@style/CalendarPickerCell.Week"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="Wed" />
+        android:text="@string/calendar_wednesday" />
 
     <TextView
+        style="@style/CalendarPickerCell.Week"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="Thu" />
+        android:text="@string/calendar_thursday" />
 
     <TextView
+        style="@style/CalendarPickerCell.Week"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="Fri" />
+        android:text="@string/calendar_friday" />
 
     <TextView
+        style="@style/CalendarPickerCell.Week"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="Sat" />
+        android:text="@string/calendar_saturday" />
 
 </LinearLayout>

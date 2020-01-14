@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="CalendarPickerCell">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+    </style>
+
+    <style name="CalendarPickerCell.Month">
+        <item name="android:textSize">@dimen/calendar_month_textsize</item>
+        <item name="android:padding">@dimen/calendar_month_padding</item>
+        <item name="android:textColor">@color/calendar_month_font</item>
+    </style>
+
+    <style name="CalendarPickerCell.Week" parent="CalendarPickerCell">
+        <item name="android:textSize">@dimen/calendar_week_textsize</item>
+        <item name="android:textColor">@color/calendar_week_font</item>
+    </style>
+
+    <style name="CalendarPickerCell.Day">
+        <item name="android:layout_width">@dimen/calendar_day_height</item>
+        <item name="android:layout_height">@dimen/calendar_day_height</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">@dimen/calendar_day_textsize</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/calendar_day_normal_font</item>
+    </style>
+
+</resources>

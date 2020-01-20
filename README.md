@@ -1,6 +1,7 @@
 # CPicker (Calendar Picker)
 📆 A simple vertical date picker for Android, written in kotlin  🇮🇩
 
+[![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-CPicker%20(CalendarPicker)-green.svg?style=flat )]( https://android-arsenal.com/details/1/8025 )
 [![Download](https://api.bintray.com/packages/andrewjapar/Android/CPicker/images/download.svg)](https://bintray.com/andrewjapar/Android/CPicker/_latestVersion)
 
 ## Screenshoot

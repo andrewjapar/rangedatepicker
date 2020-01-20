@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.andrewjapar.rangedatepicker:rangedatepicker:0.2.0'
+    implementation 'com.andrewjapar.rangedatepicker:rangedatepicker:0.2.1'
 }
 ```
 

@@ -1,6 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -36,5 +40,39 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
 }
+
+tasks.withType(Javadoc) {
+    enabled = false
+}
+
+group = 'com.andrewjapar.rangedatepicker'
+version = '0.2.0'
+
+ext {
+    bintrayRepo = 'Android'
+    bintrayName = 'CPicker'
+
+    publishedGroupId = this.group
+    libraryName = 'CPicker'
+    artifact = 'rangedatepicker'
+
+    libraryDescription = "A simple responsive vertical date picker for Android, written in kotlin."
+
+    siteUrl = 'https://github.com/andrewjapar/rangedatepicker'
+    gitUrl = 'https://github.com/andrewjapar/rangedatepicker.git'
+    developerConnection = 'https://github.com/andrewjapar/rangedatepicker.git'
+
+    libraryVersion = this.version
+
+    developerId = 'andrewjapar'
+    developerName = 'Andrew Japar'
+    developerEmail = 'andrewjap.dev@gmail.com'
+
+    licenseName = 'MIT'
+    licenseUrl = 'http://www.opensource.org/licenses/mit-license.php'
+    allLicenses = ["MIT"]
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

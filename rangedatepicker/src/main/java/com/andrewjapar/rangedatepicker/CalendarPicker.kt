@@ -57,7 +57,14 @@ class CalendarPicker : RecyclerView {
     }
 
     init {
+        startCalendar.set(HOUR_OF_DAY, 0)
+        startCalendar.set(MINUTE, 0)
+        startCalendar.set(SECOND, 0)
+        startCalendar.set(MILLISECOND, 0)
+
+        endCalendar.time = startCalendar.time
         endCalendar.add(YEAR, 1)
+
         setBackgroundColor(ContextCompat.getColor(context, R.color.calendar_picker_bg))
         initAdapter()
         initListener()

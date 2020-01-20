@@ -73,6 +73,25 @@ class CalendarPicker : RecyclerView {
         calendarAdapter.setData(mCalendarData)
     }
 
+    fun setSelectionDate(startDate: Date, endDate: Date? = null) {
+        val startIndex =
+            mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.date.time == startDate.time }
+
+        if (startIndex > -1) onDaySelected(
+            mCalendarData[startIndex] as CalendarEntity.Day,
+            startIndex
+        )
+
+        if (endDate != null) {
+            val endIndex =
+                mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.date.time == endDate.time }
+            if (endIndex > -1) onDaySelected(
+                mCalendarData[endIndex] as CalendarEntity.Day,
+                endIndex
+            )
+        }
+    }
+
     fun setMode(mode: SelectionMode) {
         mPickerSelectionType = mode
     }

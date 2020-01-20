@@ -11,14 +11,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
-        calendar.add(Calendar.MONTH, 0)
+        val firstCalendarDate = Calendar.getInstance()
+        firstCalendarDate.add(Calendar.MONTH, 0)
 
-        val calendar2 = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
-        calendar2.time = calendar.time
-        calendar2.add(Calendar.YEAR, 1)
+        val secondCalendarDate = Calendar.getInstance()
+        secondCalendarDate.time = firstCalendarDate.time
+        secondCalendarDate.add(Calendar.YEAR, 1)
 
-        calendar_view.setRangeDate(calendar.time, calendar2.time)
+        val thirdCalendarDate = Calendar.getInstance()
+        thirdCalendarDate.time = firstCalendarDate.time
+        thirdCalendarDate.add(Calendar.MONTH, 2)
 
         calendar_view.setOnRangeSelectedListener { startDate, endDate, startLabel, endLabel ->
             departure_date.text = startLabel
@@ -28,6 +30,11 @@ class MainActivity : AppCompatActivity() {
         calendar_view.setOnStartSelectedListener { startDate, label ->
             departure_date.text = label
             return_date.text = "-"
+        }
+
+        calendar_view.apply {
+            setRangeDate(firstCalendarDate.time, secondCalendarDate.time)
+            setSelectionDate(firstCalendarDate.time, thirdCalendarDate.time)
         }
     }
 }

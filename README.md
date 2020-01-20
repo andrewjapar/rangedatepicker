@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.andrewjapar.rangedatepicker:rangedatepicker:0.1.0'
+    implementation 'com.andrewjapar.rangedatepicker:rangedatepicker:0.2.0'
 }
 ```
 
@@ -39,10 +39,12 @@ endDate.add(Calendar.MONTH, 6) // Add 6 months ahead from current date
 calendar_view.apply {
   setMode(SelectionMode.RANGE) // You can set it via XML
   setRangeDate(startDate.time, endDate.time)
+  setSelectionDate(startDate.time, endDate.time)
 }
 ```
 ### 3. Don't forget to set the listener to get range selection date
 ```kotlin
+// Set listener first before set the selection to ensure we can track changed date range
 // This will be called when range is selected
 calendar_view.setOnRangeSelectedListener { startDate, endDate, startLabel, endLabel ->
     departure_date.text = startLabel

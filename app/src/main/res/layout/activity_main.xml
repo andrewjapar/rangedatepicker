@@ -73,7 +73,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/shadow_overlay"
-        app:picker_type="range" />
+        app:pickerType="range" />
 
     <View
         android:id="@+id/shadow_overlay"

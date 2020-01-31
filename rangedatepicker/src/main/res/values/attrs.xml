@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CalendarPicker">
-        <attr name="picker_type" format="enum">
+        <attr name="pickerType" format="enum">
             <enum name="single" value="0" />
             <enum name="range" value="1" />
         </attr>
+        <attr name="showDayOfWeekTitle" format="boolean" />
     </declare-styleable>
 </resources>

@@ -38,6 +38,7 @@ class CalendarPicker : RecyclerView {
     private var mStartDateSelection: SelectedDate? = null
     private var mEndDateSelection: SelectedDate? = null
     private var mPickerSelectionType = SelectionMode.RANGE
+    private var mShowDayOfWeekTitle = true
 
     private var mOnStartSelectedListener: (startDate: Date, label: String) -> Unit = { _, _ -> }
     private var mOnRangeSelectedListener: (startDate: Date, endDate: Date, startLabel: String, endLabel: String) -> Unit =
@@ -70,14 +71,22 @@ class CalendarPicker : RecyclerView {
         initListener()
     }
 
+    fun modify(func: CalendarPicker.() -> Unit): CalendarPicker {
+        this.func()
+        this.refreshData()
+
+        return this
+    }
+
     fun setRangeDate(startDate: Date, endDate: Date) {
         require(startDate.time <= endDate.time) { "startDate can't be higher than endDate" }
 
-        startCalendar.time = startDate
-        endCalendar.time = endDate
+        startCalendar.withTime(startDate)
+        endCalendar.withTime(endDate)
+    }
 
-        mCalendarData = buildCalendarData()
-        calendarAdapter.setData(mCalendarData)
+    fun showDayOfWeekTitle(show: Boolean) {
+        mShowDayOfWeekTitle = show
     }
 
     fun setSelectionDate(startDate: Date, endDate: Date? = null) {
@@ -126,6 +135,10 @@ class CalendarPicker : RecyclerView {
             }
         }
         adapter = calendarAdapter
+        refreshData()
+    }
+
+    private fun refreshData() {
         mCalendarData = buildCalendarData()
         calendarAdapter.setData(mCalendarData)
     }
@@ -133,14 +146,16 @@ class CalendarPicker : RecyclerView {
     private fun extractAttributes(attrs: AttributeSet) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CalendarPicker)
         mPickerSelectionType =
-            SelectionMode.values()[typedArray.getInt(R.styleable.CalendarPicker_picker_type, 0)]
+            SelectionMode.values()[typedArray.getInt(R.styleable.CalendarPicker_pickerType, 0)]
+        mShowDayOfWeekTitle =
+            typedArray.getBoolean(R.styleable.CalendarPicker_showDayOfWeekTitle, true)
         typedArray.recycle()
     }
 
     private fun buildCalendarData(): MutableList<CalendarEntity> {
         val calendarData = mutableListOf<CalendarEntity>()
         val cal = getInstance(timeZone, locale)
-        cal.time = startCalendar.time
+        cal.withTime(startCalendar.time)
 
         val monthDifference = endCalendar.totalMonthDifference(startCalendar)
 
@@ -159,9 +174,9 @@ class CalendarPicker : RecyclerView {
                     DateState.WEEKDAY
                 }
                 when (day) {
-                    cal.firstDayOfWeek -> {
+                    1 -> {
                         calendarData.add(CalendarEntity.Month(cal.toPrettyMonthString()))
-                        calendarData.add(CalendarEntity.Week)
+                        if (mShowDayOfWeekTitle) calendarData.add(CalendarEntity.Week)
                         calendarData.addAll(createStartEmptyView(dayOfWeek))
                         calendarData.add(
                             CalendarEntity.Day(
@@ -213,7 +228,7 @@ class CalendarPicker : RecyclerView {
         }
 
         val listEmpty = mutableListOf<CalendarEntity.Empty>()
-        repeat((0..numberOfEmptyView).count()) { listEmpty.add(CalendarEntity.Empty) }
+        repeat((0 until numberOfEmptyView).count()) { listEmpty.add(CalendarEntity.Empty) }
         return listEmpty
     }
 
@@ -229,7 +244,7 @@ class CalendarPicker : RecyclerView {
         }
 
         val listEmpty = mutableListOf<CalendarEntity.Empty>()
-        repeat((0..numberOfEmptyView).count()) { listEmpty.add(CalendarEntity.Empty) }
+        repeat((0 until numberOfEmptyView).count()) { listEmpty.add(CalendarEntity.Empty) }
         return listEmpty
     }
 
@@ -322,6 +337,15 @@ class CalendarPicker : RecyclerView {
             mStartDateSelection!!.day.prettyLabel,
             item.prettyLabel
         )
+    }
+
+    private fun Calendar.withTime(date: Date) {
+        clear()
+        time = date
+        set(HOUR_OF_DAY, 0)
+        set(MINUTE, 0)
+        set(SECOND, 0)
+        set(MILLISECOND, 0)
     }
 
     internal data class SelectedDate(val day: CalendarEntity.Day, val position: Int)

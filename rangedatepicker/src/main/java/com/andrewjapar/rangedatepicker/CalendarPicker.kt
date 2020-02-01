@@ -330,15 +330,6 @@ class CalendarPicker : RecyclerView {
         )
     }
 
-    private fun Calendar.withTime(date: Date) {
-        clear()
-        time = date
-        set(HOUR_OF_DAY, 0)
-        set(MINUTE, 0)
-        set(SECOND, 0)
-        set(MILLISECOND, 0)
-    }
-
     internal data class SelectedDate(val day: CalendarEntity.Day, val position: Int)
 
     enum class SelectionMode { SINGLE, RANGE }

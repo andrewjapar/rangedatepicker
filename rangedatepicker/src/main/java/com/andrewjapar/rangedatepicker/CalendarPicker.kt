@@ -73,7 +73,6 @@ class CalendarPicker : RecyclerView {
 
     fun modify(func: CalendarPicker.() -> Unit): CalendarPicker {
         this.func()
-        this.refreshData()
 
         return this
     }
@@ -83,6 +82,8 @@ class CalendarPicker : RecyclerView {
 
         startCalendar.withTime(startDate)
         endCalendar.withTime(endDate)
+
+        refreshData()
     }
 
     fun showDayOfWeekTitle(show: Boolean) {
@@ -91,16 +92,17 @@ class CalendarPicker : RecyclerView {
 
     fun setSelectionDate(startDate: Date, endDate: Date? = null) {
         val startIndex =
-            mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.date.time == startDate.time }
+            mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.isTheSameDay(startDate) }
 
-        if (startIndex > -1) onDaySelected(
-            mCalendarData[startIndex] as CalendarEntity.Day,
-            startIndex
-        )
+        require(startIndex != -1) {
+            "Selection start date must be included in your Calendar Range Date"
+        }
+
+        onDaySelected(mCalendarData[startIndex] as CalendarEntity.Day, startIndex)
 
         if (endDate != null) {
             val endIndex =
-                mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.date.time == endDate.time }
+                mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.isTheSameDay(endDate) }
             if (endIndex > -1) onDaySelected(
                 mCalendarData[endIndex] as CalendarEntity.Day,
                 endIndex
@@ -139,7 +141,7 @@ class CalendarPicker : RecyclerView {
     }
 
     private fun refreshData() {
-        mCalendarData = buildCalendarData()
+       mCalendarData = buildCalendarData()
         calendarAdapter.setData(mCalendarData)
     }
 

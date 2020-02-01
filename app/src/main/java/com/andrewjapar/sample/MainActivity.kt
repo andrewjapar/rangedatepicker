@@ -22,19 +22,19 @@ class MainActivity : AppCompatActivity() {
         thirdCalendarDate.time = firstCalendarDate.time
         thirdCalendarDate.add(Calendar.MONTH, 2)
 
-        calendar_view.modify {
-            setOnRangeSelectedListener { startDate, endDate, startLabel, endLabel ->
-                departure_date.text = startLabel
-                return_date.text = endLabel
-            }
-
-            setOnStartSelectedListener { startDate, label ->
-                departure_date.text = label
-                return_date.text = "-"
-            }
-
+        calendar_view.apply {
             setRangeDate(firstCalendarDate.time, secondCalendarDate.time)
             setSelectionDate(firstCalendarDate.time, thirdCalendarDate.time)
+        }
+
+        calendar_view.setOnRangeSelectedListener { startDate, endDate, startLabel, endLabel ->
+            departure_date.text = startLabel
+            return_date.text = endLabel
+        }
+
+        calendar_view.setOnStartSelectedListener { startDate, label ->
+            departure_date.text = label
+            return_date.text = "-"
         }
     }
 }

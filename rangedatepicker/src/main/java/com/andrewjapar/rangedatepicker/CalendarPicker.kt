@@ -71,12 +71,6 @@ class CalendarPicker : RecyclerView {
         initListener()
     }
 
-    fun modify(func: CalendarPicker.() -> Unit): CalendarPicker {
-        this.func()
-
-        return this
-    }
-
     fun setRangeDate(startDate: Date, endDate: Date) {
         require(startDate.time <= endDate.time) { "startDate can't be higher than endDate" }
 
@@ -91,23 +85,8 @@ class CalendarPicker : RecyclerView {
     }
 
     fun setSelectionDate(startDate: Date, endDate: Date? = null) {
-        val startIndex =
-            mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.isTheSameDay(startDate) }
-
-        require(startIndex != -1) {
-            "Selection start date must be included in your Calendar Range Date"
-        }
-
-        onDaySelected(mCalendarData[startIndex] as CalendarEntity.Day, startIndex)
-
-        if (endDate != null) {
-            val endIndex =
-                mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.isTheSameDay(endDate) }
-            if (endIndex > -1) onDaySelected(
-                mCalendarData[endIndex] as CalendarEntity.Day,
-                endIndex
-            )
-        }
+        selectDate(startDate)
+        if (endDate != null) selectDate(endDate)
     }
 
     fun setMode(mode: SelectionMode) {
@@ -140,8 +119,18 @@ class CalendarPicker : RecyclerView {
         refreshData()
     }
 
+    private fun selectDate(date: Date) {
+        val index =
+            mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.date.isTheSameDay(date) }
+        require(index > -1) {
+            "Selection date must be included in your Calendar Range Date"
+        }
+
+        onDaySelected(mCalendarData[index] as CalendarEntity.Day, index)
+    }
+
     private fun refreshData() {
-       mCalendarData = buildCalendarData()
+        mCalendarData = buildCalendarData()
         calendarAdapter.setData(mCalendarData)
     }
 

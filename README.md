@@ -36,11 +36,11 @@ val startDate = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
 val endDate = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
 endDate.add(Calendar.MONTH, 6) // Add 6 months ahead from current date
  
-calendar_view.modify {
+calendar_view.apply {
+  showDayOfWeekTitle(false) // If you want to disable day of the week title, just make it false
   setMode(SelectionMode.RANGE) // You can set it via XML
   setRangeDate(startDate.time, endDate.time)
   setSelectionDate(startDate.time, endDate.time)
-  showDayOfWeekTitle(false) // If you want to disable day of the week title, just make it false
 }
 ```
 ### 3. Don't forget to set the listener to get range selection date

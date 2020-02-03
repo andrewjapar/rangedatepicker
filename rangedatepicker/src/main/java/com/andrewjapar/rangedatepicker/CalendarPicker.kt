@@ -87,6 +87,7 @@ class CalendarPicker : RecyclerView {
     fun setSelectionDate(startDate: Date, endDate: Date? = null) {
         selectDate(startDate)
         if (endDate != null) selectDate(endDate)
+        scrollToPosition(mStartDateSelection?.position ?: 0)
     }
 
     fun setMode(mode: SelectionMode) {

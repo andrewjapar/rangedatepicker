@@ -90,6 +90,15 @@ class CalendarPicker : RecyclerView {
         scrollToPosition(mStartDateSelection?.position ?: 0)
     }
 
+    fun scrollToDate(date: Date) {
+        val index =
+            mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.date.isTheSameDay(date) }
+        require(index > -1) {
+            "Selection date must be included in your Calendar Range Date"
+        }
+        scrollToPosition(index)
+    }
+
     fun setMode(mode: SelectionMode) {
         mPickerSelectionType = mode
     }

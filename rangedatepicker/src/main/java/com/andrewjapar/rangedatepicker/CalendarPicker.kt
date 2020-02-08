@@ -80,6 +80,13 @@ class CalendarPicker : RecyclerView {
         refreshData()
     }
 
+    fun scrollToDate(date: Date) {
+        val index =
+            mCalendarData.indexOfFirst { it is CalendarEntity.Day && it.date.isTheSameDay(date) }
+        require(index > -1) { "Date to scroll must be included in your Calendar Range Date" }
+        scrollToPosition(index)
+    }
+
     fun showDayOfWeekTitle(show: Boolean) {
         mShowDayOfWeekTitle = show
     }

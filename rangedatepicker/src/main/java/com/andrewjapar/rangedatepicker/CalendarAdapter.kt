@@ -27,20 +27,15 @@ import android.view.LayoutInflater.from
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 
-internal class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder>() {
+internal class CalendarAdapter :
+    ListAdapter<CalendarEntity, CalendarViewHolder>(CalendarDiffCallback()) {
 
-    private val data: MutableList<CalendarEntity> = mutableListOf()
     var onActionListener: (CalendarEntity, Int) -> Unit = { _, _ -> }
 
-    fun setData(newData: List<CalendarEntity>) {
-        val diffCallback = CalendarDiffCallback(data, newData)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        data.clear()
-        data.addAll(newData)
-        diffResult.dispatchUpdatesTo(this)
+    override fun submitList(list: MutableList<CalendarEntity>?) {
+        super.submitList(list?.toMutableList())
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
@@ -54,14 +49,12 @@ internal class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int = data.size
-
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.onBind(data[position], onActionListener)
+        holder.onBind(getItem(position), onActionListener)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return data[position].calendarType
+        return getItem(position).calendarType
     }
 }
 

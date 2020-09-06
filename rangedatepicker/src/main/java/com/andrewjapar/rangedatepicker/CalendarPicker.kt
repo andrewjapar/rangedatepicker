@@ -26,6 +26,7 @@ package com.andrewjapar.rangedatepicker
 import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -99,6 +100,7 @@ class CalendarPicker : RecyclerView {
     }
 
     fun setSelectionDate(startDate: Date, endDate: Date? = null) {
+        itemAnimator = null
         selectDate(startDate)
         if (endDate != null) selectDate(endDate)
     }
@@ -117,6 +119,7 @@ class CalendarPicker : RecyclerView {
 
     private fun initListener() {
         calendarAdapter.onActionListener = { item, position ->
+            if (itemAnimator == null) itemAnimator = DefaultItemAnimator()
             if (item is CalendarEntity.Day) onDaySelected(item, position)
         }
     }
@@ -145,7 +148,7 @@ class CalendarPicker : RecyclerView {
 
     private fun refreshData() {
         mCalendarData = buildCalendarData()
-        calendarAdapter.setData(mCalendarData)
+        calendarAdapter.submitList(mCalendarData)
     }
 
     private fun extractAttributes(attrs: AttributeSet) {
@@ -288,7 +291,7 @@ class CalendarPicker : RecyclerView {
             }
         }
 
-        calendarAdapter.setData(mCalendarData)
+        calendarAdapter.submitList(mCalendarData)
     }
 
     private fun resetSelection() {

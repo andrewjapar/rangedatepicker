@@ -25,26 +25,17 @@ package com.andrewjapar.rangedatepicker
 
 import androidx.recyclerview.widget.DiffUtil
 
-internal class CalendarDiffCallback(
-    private val oldList: List<CalendarEntity>,
-    private val newList: List<CalendarEntity>
-) : DiffUtil.Callback() {
+internal class CalendarDiffCallback : DiffUtil.ItemCallback<CalendarEntity>() {
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition]::class == newList[newItemPosition]::class
+    override fun areItemsTheSame(oldItem: CalendarEntity, newItem: CalendarEntity): Boolean {
+        return oldItem::class == newItem::class
     }
 
-    override fun getOldListSize(): Int = oldList.size
-
-    override fun getNewListSize(): Int = newList.size
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return if (oldList[oldItemPosition] is CalendarEntity.Day && newList[newItemPosition] is CalendarEntity.Day) {
-            val oldDay = oldList[oldItemPosition] as CalendarEntity.Day
-            val newDay = newList[newItemPosition] as CalendarEntity.Day
-            oldDay.selection == newDay.selection && oldDay.isRange == newDay.isRange
+    override fun areContentsTheSame(oldItem: CalendarEntity, newItem: CalendarEntity): Boolean {
+        return if (oldItem is CalendarEntity.Day && newItem is CalendarEntity.Day) {
+            oldItem.selection == newItem.selection && oldItem.isRange == newItem.isRange
         } else {
-            oldList[oldItemPosition].selectionType == newList[newItemPosition].selectionType
+            oldItem.selectionType == newItem.selectionType
         }
     }
 }

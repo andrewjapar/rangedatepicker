@@ -47,7 +47,7 @@ tasks.withType(Javadoc) {
 }
 
 group = 'com.andrewjapar.rangedatepicker'
-version = '0.2.4'
+version = '0.3'
 
 ext {
     bintrayRepo = 'Android'

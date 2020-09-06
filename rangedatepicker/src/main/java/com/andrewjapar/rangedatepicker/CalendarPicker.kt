@@ -79,6 +79,8 @@ class CalendarPicker : RecyclerView {
         initListener()
     }
 
+    // region setter
+
     fun setRangeDate(startDate: Date, endDate: Date) {
         require(startDate.time <= endDate.time) { "startDate can't be higher than endDate" }
 
@@ -116,6 +118,16 @@ class CalendarPicker : RecyclerView {
     fun setOnRangeSelectedListener(callback: (startDate: Date, endDate: Date, startLabel: String, endLabel: String) -> Unit) {
         mOnRangeSelectedListener = callback
     }
+
+    // endregion setter
+
+    // region getter
+
+    fun getSelectedDate(): Pair<Date?, Date?> {
+        return Pair(mStartDateSelection?.day?.date, mEndDateSelection?.day?.date)
+    }
+
+    // endregion getter
 
     private fun initListener() {
         calendarAdapter.onActionListener = { item, position ->

@@ -17,6 +17,8 @@
     <style name="CalendarPickerCell.Week" parent="CalendarPickerCell">
         <item name="android:textSize">@dimen/calendar_week_textsize</item>
         <item name="android:textColor">@color/calendar_week_font</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="CalendarPickerCell.Day">

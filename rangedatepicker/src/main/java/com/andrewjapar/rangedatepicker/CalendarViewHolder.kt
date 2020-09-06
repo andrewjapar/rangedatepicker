@@ -24,10 +24,13 @@
 package com.andrewjapar.rangedatepicker
 
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.calendar_day_view.view.*
 import kotlinx.android.synthetic.main.calendar_month_view.view.*
+import kotlinx.android.synthetic.main.calendar_week_view.view.*
+import java.text.DateFormatSymbols
 
 internal abstract class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     abstract fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit)
@@ -43,8 +46,15 @@ internal class MonthViewHolder(private val view: View) : CalendarViewHolder(view
     }
 }
 
-internal open class WeekViewHolder(view: View) : CalendarViewHolder(view) {
+internal class WeekViewHolder(private val view: View) : CalendarViewHolder(view) {
+
+    private val parentContainer by lazy { view.parent_container }
+
     override fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit) {
+        val dateFormat = DateFormatSymbols().shortWeekdays
+        (1 until dateFormat.size).forEach {
+            (parentContainer.getChildAt(it - 1) as TextView).text = dateFormat[it]
+        }
     }
 }
 
@@ -127,4 +137,7 @@ internal class DayViewHolder(view: View) : CalendarViewHolder(view) {
     }
 }
 
-internal class EmptyViewHolder(view: View) : WeekViewHolder(view)
+internal class EmptyViewHolder(view: View) : CalendarViewHolder(view) {
+    override fun onBind(item: CalendarEntity, actionListener: (CalendarEntity, Int) -> Unit) {
+    }
+}
